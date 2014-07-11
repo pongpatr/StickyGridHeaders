@@ -16,8 +16,6 @@
 
 package com.tonicartos.widget.stickygridheaders;
 
-import com.tonicartos.widget.stickygridheaders.StickyGridHeadersBaseAdapterWrapper.HeaderFillerView;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -49,16 +47,16 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.GridView;
 import android.widget.ListAdapter;
 
+import com.tonicartos.widget.stickygridheaders.StickyGridHeadersBaseAdapterWrapper.HeaderFillerView;
+
 /**
- * GridView that displays items in sections with headers that stick to the top
- * of the view.
+ * GridView that displays items in sections with headers that stick to the top of the view.
  * 
  * @author Tonic Artos, Emil Sjölander, caguilar187
  */
-public class StickyGridHeadersGridView extends GridView implements OnScrollListener,
-        OnItemClickListener, OnItemSelectedListener, OnItemLongClickListener {
-    private static final String ERROR_PLATFORM = "Error supporting platform "
-            + Build.VERSION.SDK_INT + ".";
+public class StickyGridHeadersGridView extends GridView implements OnScrollListener, OnItemClickListener, OnItemSelectedListener,
+        OnItemLongClickListener {
+    private static final String ERROR_PLATFORM = "Error supporting platform " + Build.VERSION.SDK_INT + ".";
 
     private static final int MATCHED_STICKIED_HEADER = -2;
 
@@ -202,12 +200,11 @@ public class StickyGridHeadersGridView extends GridView implements OnScrollListe
     }
 
     /**
-     * Gets the header at an item position. However, the position must be that
-     * of a HeaderFiller.
+     * Gets the header at an item position. However, the position must be that of a HeaderFiller.
      * 
-     * @param position Position of HeaderFiller.
-     * @return Header View wrapped in HeaderFiller or null if no header was
-     *         found.
+     * @param position
+     *            Position of HeaderFiller.
+     * @return Header View wrapped in HeaderFiller or null if no header was found.
      */
     public View getHeaderAt(int position) {
         if (position == MATCHED_STICKIED_HEADER) {
@@ -215,9 +212,9 @@ public class StickyGridHeadersGridView extends GridView implements OnScrollListe
         }
 
         try {
-            return (View)getChildAt(position).getTag();
-        } catch (Exception e) {
+            return (View) getChildAt(position).getTag();
         }
+        catch (Exception e) {}
         return null;
     }
 
@@ -236,20 +233,17 @@ public class StickyGridHeadersGridView extends GridView implements OnScrollListe
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        mOnItemClickListener.onItemClick(parent, view,
-                mAdapter.translatePosition(position).mPosition, id);
+        mOnItemClickListener.onItemClick(parent, view, mAdapter.translatePosition(position).mPosition, id);
     }
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        return mOnItemLongClickListener.onItemLongClick(parent, view,
-                mAdapter.translatePosition(position).mPosition, id);
+        return mOnItemLongClickListener.onItemLongClick(parent, view, mAdapter.translatePosition(position).mPosition, id);
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        mOnItemSelectedListener.onItemSelected(parent, view,
-                mAdapter.translatePosition(position).mPosition, id);
+        mOnItemSelectedListener.onItemSelected(parent, view, mAdapter.translatePosition(position).mPosition, id);
     }
 
     @Override
@@ -259,7 +253,7 @@ public class StickyGridHeadersGridView extends GridView implements OnScrollListe
 
     @Override
     public void onRestoreInstanceState(Parcelable state) {
-        SavedState ss = (SavedState)state;
+        SavedState ss = (SavedState) state;
 
         super.onRestoreInstanceState(ss.getSuperState());
         mAreHeadersSticky = ss.areHeadersSticky;
@@ -269,16 +263,16 @@ public class StickyGridHeadersGridView extends GridView implements OnScrollListe
 
     @Override
     public Parcelable onSaveInstanceState() {
-        Parcelable superState = super.onSaveInstanceState();
-
-        SavedState ss = new SavedState(superState);
-        ss.areHeadersSticky = mAreHeadersSticky;
-        return ss;
+        return super.onSaveInstanceState();
+        // Parcelable superState = super.onSaveInstanceState();
+        //
+        // SavedState ss = new SavedState(superState);
+        // ss.areHeadersSticky = mAreHeadersSticky;
+        // return ss;
     }
 
     @Override
-    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
-            int totalItemCount) {
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
         if (mScrollListener != null) {
             mScrollListener.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
         }
@@ -303,8 +297,7 @@ public class StickyGridHeadersGridView extends GridView implements OnScrollListe
         boolean wasHeaderChildBeingPressed = mHeaderChildBeingPressed;
         if (mHeaderChildBeingPressed) {
             final View tempHeader = getHeaderAt(mMotionHeaderPosition);
-            final View headerHolder = mMotionHeaderPosition == MATCHED_STICKIED_HEADER ?
-                    tempHeader : getChildAt(mMotionHeaderPosition);
+            final View headerHolder = mMotionHeaderPosition == MATCHED_STICKIED_HEADER ? tempHeader : getChildAt(mMotionHeaderPosition);
             if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
                 mHeaderChildBeingPressed = false;
             }
@@ -313,10 +306,10 @@ public class StickyGridHeadersGridView extends GridView implements OnScrollListe
                 tempHeader.invalidate();
                 tempHeader.postDelayed(new Runnable() {
                     public void run() {
-                        invalidate(0, headerHolder.getTop(), getWidth(), headerHolder.getTop()+headerHolder.getHeight());
+                        invalidate(0, headerHolder.getTop(), getWidth(), headerHolder.getTop() + headerHolder.getHeight());
                     }
                 }, ViewConfiguration.getPressedStateDuration());
-                invalidate(0, headerHolder.getTop(), getWidth(), headerHolder.getTop()+headerHolder.getHeight());
+                invalidate(0, headerHolder.getTop(), getWidth(), headerHolder.getTop() + headerHolder.getHeight());
             }
         }
 
@@ -327,15 +320,15 @@ public class StickyGridHeadersGridView extends GridView implements OnScrollListe
                 }
                 postDelayed(mPendingCheckForTap, ViewConfiguration.getTapTimeout());
 
-                final int y = (int)ev.getY();
+                final int y = (int) ev.getY();
                 mMotionY = y;
                 mMotionHeaderPosition = findMotionHeader(y);
-                if (mMotionHeaderPosition == NO_MATCHED_HEADER
-                        || mScrollState == SCROLL_STATE_FLING) {
+                if (mMotionHeaderPosition == NO_MATCHED_HEADER || mScrollState == SCROLL_STATE_FLING) {
                     // Don't consume the event and pass it to super because we
                     // can't handle it yet.
                     break;
-                } else {
+                }
+                else {
                     View tempHeader = getHeaderAt(mMotionHeaderPosition);
                     if (tempHeader != null) {
                         if (tempHeader.dispatchTouchEvent(transformEvent(ev, mMotionHeaderPosition))) {
@@ -346,14 +339,13 @@ public class StickyGridHeadersGridView extends GridView implements OnScrollListe
                         if (mMotionHeaderPosition != MATCHED_STICKIED_HEADER) {
                             tempHeader = getChildAt(mMotionHeaderPosition);
                         }
-                        invalidate(0, tempHeader.getTop(), getWidth(), tempHeader.getTop()+tempHeader.getHeight());
+                        invalidate(0, tempHeader.getTop(), getWidth(), tempHeader.getTop() + tempHeader.getHeight());
                     }
                 }
                 mTouchMode = TOUCH_MODE_DOWN;
                 return true;
             case MotionEvent.ACTION_MOVE:
-                if (mMotionHeaderPosition != NO_MATCHED_HEADER
-                        && Math.abs(ev.getY() - mMotionY) > mTouchSlop) {
+                if (mMotionHeaderPosition != NO_MATCHED_HEADER && Math.abs(ev.getY() - mMotionY) > mTouchSlop) {
                     // Detected scroll initiation so cancel touch completion on
                     // header.
                     mTouchMode = TOUCH_MODE_REST;
@@ -398,14 +390,12 @@ public class StickyGridHeadersGridView extends GridView implements OnScrollListe
                         if (mTouchMode == TOUCH_MODE_DOWN || mTouchMode == TOUCH_MODE_TAP) {
                             final Handler handler = getHandler();
                             if (handler != null) {
-                                handler.removeCallbacks(mTouchMode == TOUCH_MODE_DOWN ? mPendingCheckForTap
-                                        : mPendingCheckForLongPress);
+                                handler.removeCallbacks(mTouchMode == TOUCH_MODE_DOWN ? mPendingCheckForTap : mPendingCheckForLongPress);
                             }
 
                             if (!mDataChanged) {
                                 /*
-                                 * Got here so must be a tap. The long press
-                                 * would have triggered on the callback handler.
+                                 * Got here so must be a tap. The long press would have triggered on the callback handler.
                                  */
                                 mTouchMode = TOUCH_MODE_TAP;
                                 header.setPressed(true);
@@ -422,19 +412,19 @@ public class StickyGridHeadersGridView extends GridView implements OnScrollListe
                                         header.setPressed(false);
                                         setPressed(false);
                                         header.invalidate();
-                                        invalidate(0, header.getTop(), getWidth(),
-                                                header.getHeight());
+                                        invalidate(0, header.getTop(), getWidth(), header.getHeight());
                                         if (!mDataChanged) {
                                             performHeaderClick.run();
                                         }
                                     }
                                 };
-                                postDelayed(mTouchModeReset,
-                                        ViewConfiguration.getPressedStateDuration());
-                            } else {
+                                postDelayed(mTouchModeReset, ViewConfiguration.getPressedStateDuration());
+                            }
+                            else {
                                 mTouchMode = TOUCH_MODE_REST;
                             }
-                        } else if (!mDataChanged) {
+                        }
+                        else if (!mDataChanged) {
                             performHeaderClick.run();
                         }
                     }
@@ -486,12 +476,13 @@ public class StickyGridHeadersGridView extends GridView implements OnScrollListe
 
         StickyGridHeadersBaseAdapter baseAdapter;
         if (adapter instanceof StickyGridHeadersBaseAdapter) {
-            baseAdapter = (StickyGridHeadersBaseAdapter)adapter;
-        } else if (adapter instanceof StickyGridHeadersSimpleAdapter) {
+            baseAdapter = (StickyGridHeadersBaseAdapter) adapter;
+        }
+        else if (adapter instanceof StickyGridHeadersSimpleAdapter) {
             // Wrap up simple adapter to auto-generate the data we need.
-            baseAdapter = new StickyGridHeadersSimpleAdapterWrapper(
-                    (StickyGridHeadersSimpleAdapter)adapter);
-        } else {
+            baseAdapter = new StickyGridHeadersSimpleAdapterWrapper((StickyGridHeadersSimpleAdapter) adapter);
+        }
+        else {
             // Wrap up a list adapter so it is an adapter with zero headers.
             baseAdapter = new StickyGridHeadersListAdapterWrapper(adapter);
         }
@@ -525,7 +516,8 @@ public class StickyGridHeadersGridView extends GridView implements OnScrollListe
     /**
      * If set to true, headers will ignore horizontal padding.
      * 
-     * @param b if true, horizontal padding is ignored by headers
+     * @param b
+     *            if true, horizontal padding is ignored by headers
      */
     public void setHeadersIgnorePadding(boolean b) {
         mHeadersIgnorePadding = b;
@@ -565,8 +557,7 @@ public class StickyGridHeadersGridView extends GridView implements OnScrollListe
     }
 
     @Override
-    public void setOnItemLongClickListener(
-            android.widget.AdapterView.OnItemLongClickListener listener) {
+    public void setOnItemLongClickListener(android.widget.AdapterView.OnItemLongClickListener listener) {
         this.mOnItemLongClickListener = listener;
         super.setOnItemLongClickListener(this);
     }
@@ -638,9 +629,9 @@ public class StickyGridHeadersGridView extends GridView implements OnScrollListe
         int widthMeasureSpec;
         if (mHeadersIgnorePadding) {
             widthMeasureSpec = MeasureSpec.makeMeasureSpec(getWidth(), MeasureSpec.EXACTLY);
-        } else {
-            widthMeasureSpec = MeasureSpec.makeMeasureSpec(getWidth() - getPaddingLeft()
-                    - getPaddingRight(), MeasureSpec.EXACTLY);
+        }
+        else {
+            widthMeasureSpec = MeasureSpec.makeMeasureSpec(getWidth() - getPaddingLeft() - getPaddingRight(), MeasureSpec.EXACTLY);
         }
 
         int heightMeasureSpec = 0;
@@ -648,17 +639,18 @@ public class StickyGridHeadersGridView extends GridView implements OnScrollListe
         ViewGroup.LayoutParams params = mStickiedHeader.getLayoutParams();
         if (params != null && params.height > 0) {
             heightMeasureSpec = MeasureSpec.makeMeasureSpec(params.height, MeasureSpec.EXACTLY);
-        } else {
+        }
+        else {
             heightMeasureSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
         }
-        mStickiedHeader.measure(MeasureSpec.makeMeasureSpec(0,0), MeasureSpec.makeMeasureSpec(0,0));
+        mStickiedHeader.measure(MeasureSpec.makeMeasureSpec(0, 0), MeasureSpec.makeMeasureSpec(0, 0));
         mStickiedHeader.measure(widthMeasureSpec, heightMeasureSpec);
 
         if (mHeadersIgnorePadding) {
             mStickiedHeader.layout(getLeft(), 0, getRight(), mStickiedHeader.getMeasuredHeight());
-        } else {
-            mStickiedHeader.layout(getLeft() + getPaddingLeft(), 0, getRight() - getPaddingRight(),
-                    mStickiedHeader.getMeasuredHeight());
+        }
+        else {
+            mStickiedHeader.layout(getLeft() + getPaddingLeft(), 0, getRight() - getPaddingRight(), mStickiedHeader.getMeasuredHeight());
         }
     }
 
@@ -693,28 +685,31 @@ public class StickyGridHeadersGridView extends GridView implements OnScrollListe
 
         if (mVerticalSpacing == 0) {
             newHeaderId = mAdapter.getHeaderId(firstVisibleItem);
-        } else if (mVerticalSpacing < 0) {
+        }
+        else if (mVerticalSpacing < 0) {
             newHeaderId = mAdapter.getHeaderId(firstVisibleItem);
             View firstSecondRowView = getChildAt(mNumMeasuredColumns);
             if (firstSecondRowView.getTop() <= 0) {
                 newHeaderId = mAdapter.getHeaderId(secondRowPosition);
                 selectedHeaderPosition = secondRowPosition;
-            } else {
+            }
+            else {
                 newHeaderId = mAdapter.getHeaderId(firstVisibleItem);
             }
-        } else {
+        }
+        else {
             int margin = getChildAt(0).getTop();
             if (0 < margin && margin < mVerticalSpacing) {
                 newHeaderId = mAdapter.getHeaderId(beforeRowPosition);
                 selectedHeaderPosition = beforeRowPosition;
-            } else {
+            }
+            else {
                 newHeaderId = mAdapter.getHeaderId(firstVisibleItem);
             }
         }
 
         if (mCurrentHeaderId != newHeaderId) {
-            swapStickiedHeader(mAdapter
-                    .getHeaderView(selectedHeaderPosition, mStickiedHeader, this));
+            swapStickiedHeader(mAdapter.getHeaderView(selectedHeaderPosition, mStickiedHeader, this));
             measureHeader();
             mCurrentHeaderId = newHeaderId;
         }
@@ -731,7 +726,8 @@ public class StickyGridHeadersGridView extends GridView implements OnScrollListe
                 int childDistance;
                 if (mClippingToPadding) {
                     childDistance = child.getTop() - getPaddingTop();
-                } else {
+                }
+                else {
                     childDistance = child.getTop();
                 }
 
@@ -751,23 +747,22 @@ public class StickyGridHeadersGridView extends GridView implements OnScrollListe
             // Work out where to draw stickied header using synchronised
             // scrolling.
             if (viewToWatch != null) {
-                if (firstVisibleItem == 0 && super.getChildAt(0).getTop() > 0
-                        && !mClippingToPadding) {
+                if (firstVisibleItem == 0 && super.getChildAt(0).getTop() > 0 && !mClippingToPadding) {
                     mHeaderBottomPosition = 0;
-                } else {
+                }
+                else {
                     if (mClippingToPadding) {
-                        mHeaderBottomPosition = Math.min(viewToWatch.getTop(), headerHeight
-                                + getPaddingTop());
-                        mHeaderBottomPosition = mHeaderBottomPosition < getPaddingTop() ? headerHeight
-                                + getPaddingTop()
-                                : mHeaderBottomPosition;
-                    } else {
-                        mHeaderBottomPosition = Math.min(viewToWatch.getTop(), headerHeight);
-                        mHeaderBottomPosition = mHeaderBottomPosition < 0 ? headerHeight
+                        mHeaderBottomPosition = Math.min(viewToWatch.getTop(), headerHeight + getPaddingTop());
+                        mHeaderBottomPosition = mHeaderBottomPosition < getPaddingTop() ? headerHeight + getPaddingTop()
                                 : mHeaderBottomPosition;
                     }
+                    else {
+                        mHeaderBottomPosition = Math.min(viewToWatch.getTop(), headerHeight);
+                        mHeaderBottomPosition = mHeaderBottomPosition < 0 ? headerHeight : mHeaderBottomPosition;
+                    }
                 }
-            } else {
+            }
+            else {
                 mHeaderBottomPosition = headerHeight;
                 if (mClippingToPadding) {
                     mHeaderBottomPosition += getPaddingTop();
@@ -802,11 +797,10 @@ public class StickyGridHeadersGridView extends GridView implements OnScrollListe
         int flags = e.getFlags();
 
         View headerHolder = getChildAt(headerPosition);
-        for (int i = 0; i < pointerCount;i++) {
+        for (int i = 0; i < pointerCount; i++) {
             pointerCoords[i].y -= headerHolder.getTop();
         }
-        MotionEvent n = MotionEvent.obtain(downTime, eventTime, action,
-                pointerCount, pointerIds, pointerCoords, metaState, xPrecision,
+        MotionEvent n = MotionEvent.obtain(downTime, eventTime, action, pointerCount, pointerIds, pointerCoords, metaState, xPrecision,
                 yPrecision, deviceId, edgeFlags, source, flags);
         return n;
     }
@@ -817,8 +811,9 @@ public class StickyGridHeadersGridView extends GridView implements OnScrollListe
             scrollChanged(getFirstVisiblePosition());
         }
 
-        boolean drawStickiedHeader = mStickiedHeader != null && mAreHeadersSticky
-                && mStickiedHeader.getVisibility() == View.VISIBLE;
+        boolean drawStickiedHeader = mStickiedHeader != null && mAreHeadersSticky && mStickiedHeader.getVisibility() == View.VISIBLE;
+        drawStickiedHeader = false;// XXX: we do not want sticky header
+
         int headerHeight = getHeaderHeight();
         int top = mHeaderBottomPosition - headerHeight;
 
@@ -828,7 +823,8 @@ public class StickyGridHeadersGridView extends GridView implements OnScrollListe
             if (mHeadersIgnorePadding) {
                 mClippingRect.left = 0;
                 mClippingRect.right = getWidth();
-            } else {
+            }
+            else {
                 mClippingRect.left = getPaddingLeft();
                 mClippingRect.right = getWidth() - getPaddingRight();
             }
@@ -859,13 +855,15 @@ public class StickyGridHeadersGridView extends GridView implements OnScrollListe
             View frame = getChildAt(headerPositions.get(i));
             View header;
             try {
-                header = (View)frame.getTag();
-            } catch (Exception e) {
+                header = (View) frame.getTag();
+            }
+            catch (Exception e) {
                 return;
             }
 
-            boolean headerIsStickied = ((HeaderFillerView)frame).getHeaderId() == mCurrentHeaderId
-                    && frame.getTop() < 0 && mAreHeadersSticky;
+            boolean headerIsStickied = ((HeaderFillerView) frame).getHeaderId() == mCurrentHeaderId && frame.getTop() < 0
+                    && mAreHeadersSticky;
+            headerIsStickied = false;// XXX: we do not want sticky header
             if (header.getVisibility() != View.VISIBLE || headerIsStickied) {
                 continue;
             }
@@ -873,26 +871,27 @@ public class StickyGridHeadersGridView extends GridView implements OnScrollListe
             int widthMeasureSpec;
             if (mHeadersIgnorePadding) {
                 widthMeasureSpec = MeasureSpec.makeMeasureSpec(getWidth(), MeasureSpec.EXACTLY);
-            } else {
-                widthMeasureSpec = MeasureSpec.makeMeasureSpec(getWidth() - getPaddingLeft()
-                        - getPaddingRight(), MeasureSpec.EXACTLY);
+            }
+            else {
+                widthMeasureSpec = MeasureSpec.makeMeasureSpec(getWidth() - getPaddingLeft() - getPaddingRight(), MeasureSpec.EXACTLY);
             }
 
             int heightMeasureSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
-            header.measure(MeasureSpec.makeMeasureSpec(0,0),MeasureSpec.makeMeasureSpec(0,0));
+            header.measure(MeasureSpec.makeMeasureSpec(0, 0), MeasureSpec.makeMeasureSpec(0, 0));
             header.measure(widthMeasureSpec, heightMeasureSpec);
 
             if (mHeadersIgnorePadding) {
                 header.layout(getLeft(), 0, getRight(), frame.getHeight());
-            } else {
-                header.layout(getLeft() + getPaddingLeft(), 0, getRight() - getPaddingRight(),
-                        frame.getHeight());
+            }
+            else {
+                header.layout(getLeft() + getPaddingLeft(), 0, getRight() - getPaddingRight(), frame.getHeight());
             }
 
             if (mHeadersIgnorePadding) {
                 mClippingRect.left = 0;
                 mClippingRect.right = getWidth();
-            } else {
+            }
+            else {
                 mClippingRect.left = getPaddingLeft();
                 mClippingRect.right = getWidth() - getPaddingRight();
             }
@@ -903,7 +902,8 @@ public class StickyGridHeadersGridView extends GridView implements OnScrollListe
             canvas.clipRect(mClippingRect);
             if (mHeadersIgnorePadding) {
                 canvas.translate(0, frame.getTop());
-            } else {
+            }
+            else {
                 canvas.translate(getPaddingLeft(), frame.getTop());
             }
             header.draw(canvas);
@@ -912,7 +912,8 @@ public class StickyGridHeadersGridView extends GridView implements OnScrollListe
 
         if (drawStickiedHeader && mMaskStickyHeaderRegion) {
             canvas.restore();
-        } else if (!drawStickiedHeader) {
+        }
+        else if (!drawStickiedHeader) {
             // Done.
             return;
         }
@@ -921,39 +922,42 @@ public class StickyGridHeadersGridView extends GridView implements OnScrollListe
         int wantedWidth;
         if (mHeadersIgnorePadding) {
             wantedWidth = getWidth();
-        } else {
+        }
+        else {
             wantedWidth = getWidth() - getPaddingLeft() - getPaddingRight();
         }
         if (mStickiedHeader.getWidth() != wantedWidth) {
             int widthMeasureSpec;
             if (mHeadersIgnorePadding) {
                 widthMeasureSpec = MeasureSpec.makeMeasureSpec(getWidth(), MeasureSpec.EXACTLY);
-            } else {
-                widthMeasureSpec = MeasureSpec.makeMeasureSpec(getWidth() - getPaddingLeft()
-                        - getPaddingRight(), MeasureSpec.EXACTLY); // Bug here
+            }
+            else {
+                widthMeasureSpec = MeasureSpec.makeMeasureSpec(getWidth() - getPaddingLeft() - getPaddingRight(), MeasureSpec.EXACTLY); // Bug here
             }
             int heightMeasureSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
-            mStickiedHeader.measure(MeasureSpec.makeMeasureSpec(0,0),MeasureSpec.makeMeasureSpec(0,0));
+            mStickiedHeader.measure(MeasureSpec.makeMeasureSpec(0, 0), MeasureSpec.makeMeasureSpec(0, 0));
             mStickiedHeader.measure(widthMeasureSpec, heightMeasureSpec);
             if (mHeadersIgnorePadding) {
                 mStickiedHeader.layout(getLeft(), 0, getRight(), mStickiedHeader.getHeight());
-            } else {
-                mStickiedHeader.layout(getLeft() + getPaddingLeft(), 0, getRight()
-                        - getPaddingRight(), mStickiedHeader.getHeight());
+            }
+            else {
+                mStickiedHeader.layout(getLeft() + getPaddingLeft(), 0, getRight() - getPaddingRight(), mStickiedHeader.getHeight());
             }
         }
 
         if (mHeadersIgnorePadding) {
             mClippingRect.left = 0;
             mClippingRect.right = getWidth();
-        } else {
+        }
+        else {
             mClippingRect.left = getPaddingLeft();
             mClippingRect.right = getWidth() - getPaddingRight();
         }
         mClippingRect.bottom = top + headerHeight;
         if (mClippingToPadding) {
             mClippingRect.top = getPaddingTop();
-        } else {
+        }
+        else {
             mClippingRect.top = 0;
         }
 
@@ -962,13 +966,14 @@ public class StickyGridHeadersGridView extends GridView implements OnScrollListe
 
         if (mHeadersIgnorePadding) {
             canvas.translate(0, top);
-        } else {
+        }
+        else {
             canvas.translate(getPaddingLeft(), top);
         }
 
         if (mHeaderBottomPosition != headerHeight) {
-            canvas.saveLayerAlpha(0, 0, canvas.getWidth(), canvas.getHeight(), 255
-                    * mHeaderBottomPosition / headerHeight, Canvas.ALL_SAVE_FLAG);
+            canvas.saveLayerAlpha(0, 0, canvas.getWidth(), canvas.getHeight(), 255 * mHeaderBottomPosition / headerHeight,
+                    Canvas.ALL_SAVE_FLAG);
         }
 
         mStickiedHeader.draw(canvas);
@@ -984,32 +989,34 @@ public class StickyGridHeadersGridView extends GridView implements OnScrollListe
         if (mNumColumns == AUTO_FIT) {
             int numFittedColumns;
             if (mColumnWidth > 0) {
-                int gridWidth = Math.max(MeasureSpec.getSize(widthMeasureSpec) - getPaddingLeft()
-                        - getPaddingRight(), 0);
+                int gridWidth = Math.max(MeasureSpec.getSize(widthMeasureSpec) - getPaddingLeft() - getPaddingRight(), 0);
                 numFittedColumns = gridWidth / mColumnWidth;
                 // Calculate measured columns accounting for requested grid
                 // spacing.
                 if (numFittedColumns > 0) {
                     while (numFittedColumns != 1) {
-                        if (numFittedColumns * mColumnWidth + (numFittedColumns - 1)
-                                * mHorizontalSpacing > gridWidth) {
+                        if (numFittedColumns * mColumnWidth + (numFittedColumns - 1) * mHorizontalSpacing > gridWidth) {
                             numFittedColumns--;
-                        } else {
+                        }
+                        else {
                             break;
                         }
                     }
-                } else {
+                }
+                else {
                     // Could not fit any columns in grid width, so default to a
                     // single column.
                     numFittedColumns = 1;
                 }
-            } else {
+            }
+            else {
                 // Mimic vanilla GridView behaviour where there is not enough
                 // information to auto-fit columns.
                 numFittedColumns = 2;
             }
             mNumMeasuredColumns = numFittedColumns;
-        } else {
+        }
+        else {
             // There were some number of columns requested so we will try to
             // fulfil the request.
             mNumMeasuredColumns = mNumColumns;
@@ -1033,21 +1040,27 @@ public class StickyGridHeadersGridView extends GridView implements OnScrollListe
         try {
             Field attachInfoField = View.class.getDeclaredField("mAttachInfo");
             attachInfoField.setAccessible(true);
-            Method method = View.class.getDeclaredMethod("dispatchAttachedToWindow",
-                    Class.forName("android.view.View$AttachInfo"), Integer.TYPE);
+            Method method = View.class.getDeclaredMethod("dispatchAttachedToWindow", Class.forName("android.view.View$AttachInfo"),
+                    Integer.TYPE);
             method.setAccessible(true);
             method.invoke(header, attachInfoField.get(this), View.GONE);
-        } catch (NoSuchMethodException e) {
+        }
+        catch (NoSuchMethodException e) {
             throw new RuntimePlatformSupportException(e);
-        } catch (ClassNotFoundException e) {
+        }
+        catch (ClassNotFoundException e) {
             throw new RuntimePlatformSupportException(e);
-        } catch (IllegalArgumentException e) {
+        }
+        catch (IllegalArgumentException e) {
             throw new RuntimePlatformSupportException(e);
-        } catch (IllegalAccessException e) {
+        }
+        catch (IllegalAccessException e) {
             throw new RuntimePlatformSupportException(e);
-        } catch (InvocationTargetException e) {
+        }
+        catch (InvocationTargetException e) {
             throw new RuntimePlatformSupportException(e);
-        } catch (NoSuchFieldException e) {
+        }
+        catch (NoSuchFieldException e) {
             throw new RuntimePlatformSupportException(e);
         }
     }
@@ -1061,13 +1074,17 @@ public class StickyGridHeadersGridView extends GridView implements OnScrollListe
             Method method = View.class.getDeclaredMethod("dispatchDetachedFromWindow");
             method.setAccessible(true);
             method.invoke(header);
-        } catch (NoSuchMethodException e) {
+        }
+        catch (NoSuchMethodException e) {
             throw new RuntimePlatformSupportException(e);
-        } catch (IllegalArgumentException e) {
+        }
+        catch (IllegalArgumentException e) {
             throw new RuntimePlatformSupportException(e);
-        } catch (IllegalAccessException e) {
+        }
+        catch (IllegalAccessException e) {
             throw new RuntimePlatformSupportException(e);
-        } catch (InvocationTargetException e) {
+        }
+        catch (InvocationTargetException e) {
             throw new RuntimePlatformSupportException(e);
         }
     }
@@ -1095,7 +1112,8 @@ public class StickyGridHeadersGridView extends GridView implements OnScrollListe
                     mTouchMode = TOUCH_MODE_FINISHED_LONG_PRESS;
                     setPressed(false);
                     child.setPressed(false);
-                } else {
+                }
+                else {
                     mTouchMode = TOUCH_MODE_DONE_WAITING;
                 }
             }
@@ -1109,11 +1127,9 @@ public class StickyGridHeadersGridView extends GridView implements OnScrollListe
         public void run() {
             // The data has changed since we posted this action to the event
             // queue, bail out before bad things happen.
-            if (mDataChanged)
-                return;
+            if (mDataChanged) return;
 
-            if (mAdapter != null && mAdapter.getCount() > 0
-                    && mClickMotionPosition != INVALID_POSITION
+            if (mAdapter != null && mAdapter.getCount() > 0 && mClickMotionPosition != INVALID_POSITION
                     && mClickMotionPosition < mAdapter.getCount() && sameWindow()) {
                 final View view = getHeaderAt(mClickMotionPosition);
                 // If there is no view then something bad happened, the view
@@ -1127,8 +1143,7 @@ public class StickyGridHeadersGridView extends GridView implements OnScrollListe
     }
 
     /**
-     * A base class for Runnables that will check that their view is still
-     * attached to the original window as when the Runnable was created.
+     * A base class for Runnables that will check that their view is still attached to the original window as when the Runnable was created.
      */
     private class WindowRunnable {
         private int mOriginalAttachCount;
@@ -1163,10 +1178,12 @@ public class StickyGridHeadersGridView extends GridView implements OnScrollListe
                             }
                             mPendingCheckForLongPress.rememberWindowAttachCount();
                             postDelayed(mPendingCheckForLongPress, longPressTimeout);
-                        } else {
+                        }
+                        else {
                             mTouchMode = TOUCH_MODE_DONE_WAITING;
                         }
-                    } else {
+                    }
+                    else {
                         mTouchMode = TOUCH_MODE_DONE_WAITING;
                     }
                 }
@@ -1214,15 +1231,14 @@ public class StickyGridHeadersGridView extends GridView implements OnScrollListe
 
         @Override
         public String toString() {
-            return "StickyGridHeadersGridView.SavedState{"
-                    + Integer.toHexString(System.identityHashCode(this)) + " areHeadersSticky="
+            return "StickyGridHeadersGridView.SavedState{" + Integer.toHexString(System.identityHashCode(this)) + " areHeadersSticky="
                     + areHeadersSticky + "}";
         }
 
         @Override
         public void writeToParcel(Parcel out, int flags) {
             super.writeToParcel(out, flags);
-            out.writeByte((byte)(areHeadersSticky ? 1 : 0));
+            out.writeByte((byte) (areHeadersSticky ? 1 : 0));
         }
     }
 }
